@@ -1,0 +1,41 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "bento/ubuntu-24.04"
+
+  # obednaouS (Server)
+  config.vm.define "obednaouS" do |control|
+    control.vm.hostname = "obednaouS"
+    control.vm.network "private_network", ip: "192.168.56.110"
+
+    control.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--name", "obednaouS"]
+      v.memory = 1024 
+      v.cpus = 1
+    end
+
+    control.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+    SHELL
+
+    control.vm.provision "shell", path: "scripts/server.sh"
+  end
+
+  # obednaouSW (ServerWorker) 
+  config.vm.define "obednaouSW" do |control|
+    control.vm.hostname = "obednaouSW"
+    control.vm.network "private_network", ip: "192.168.56.111"
+
+    control.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--name", "obednaouSW"]
+      v.memory = 1024 
+      v.cpus = 1
+    end
+
+    control.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+    SHELL
+
+    control.vm.provision "shell", path: "scripts/worker.sh"
+  end
+
+end
